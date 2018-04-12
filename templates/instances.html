@@ -1,0 +1,54 @@
+{% extends "admin/base.html" %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>Instances/<a href="{{ request.script_root }}/admin/deployments_teams">Teams</a></h1>
+        <h3><i>Pls don't mess with this</i></h3>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>InstanceID</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>TeamID</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Name</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>IP</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Allowed</b></td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for instance in instances %}
+                    <tr>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            {{instance.id}}
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            {{instance.teamid}}
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            {{instance.name}}
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            <span>{{instance.ip}}</span>
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            <span>{{instance.allowed}}</span>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

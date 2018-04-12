@@ -1,0 +1,54 @@
+{% extends "admin/base.html" %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1><a href="{{ request.script_root }}/admin/deployments">Instances</a>/Teams</h1>
+        <h3><i>Pls don't mess with this</i></h3>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>TeamID</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Team</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Instance</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Allowed</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Manage</b></td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for team in teams %}
+                    <tr>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            {{team.id}}
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            {{team.name}}
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            {{ mapping[team.name][0] }}
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            {{ mapping[team.name][1] }} (<a href="{{ request.script_root }}/admin/deployments/{{team.id}}/allow">allow</a>)
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            <span><a href="{{ request.script_root }}/admin/deployments/{{team.id}}/new">New</a> / <a href="{{ request.script_root }}/admin/deployments/{{team.id}}/delete">Delete</a></span>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
