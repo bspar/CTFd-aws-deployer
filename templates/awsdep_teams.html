@@ -18,7 +18,7 @@
                     <tr>
                         <td class="d-none d-md-table-cell d-lg-table-cell"><b>TeamID</b></td>
                         <td class="d-none d-md-table-cell d-lg-table-cell"><b>Team</b></td>
-                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Instance</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>IP</b></td>
                         <td class="d-none d-md-table-cell d-lg-table-cell"><b>Allowed</b></td>
                         <td class="d-none d-md-table-cell d-lg-table-cell"><b>Manage</b></td>
                     </tr>
@@ -36,10 +36,10 @@
                             {{ mapping[team.name][0] }}
                         </td>
                         <td class="d-none d-md-table-cell d-lg-table-cell">
-                            {{ mapping[team.name][1] }} (<a href="{{ request.script_root }}/admin/deployments/{{team.id}}/allow">allow</a>)
+                            {{ mapping[team.name][1] }} (<a href="{{ request.script_root }}/admin/deployments_teams/{{team.id}}/allow">allow</a>)
                         </td>
                         <td class="d-none d-md-table-cell d-lg-table-cell">
-                            <span><a href="{{ request.script_root }}/admin/deployments/{{team.id}}/new">New</a> / <a href="{{ request.script_root }}/admin/deployments/{{team.id}}/delete">Delete</a></span>
+                            <span><a href="{{ request.script_root }}/admin/deployments_teams/{{team.id}}/new">New</a> / <a href="{{ request.script_root }}/admin/deployments_teams/{{team.id}}/delete">Delete</a></span>
                         </td>
                     </tr>
                 {% endfor %}

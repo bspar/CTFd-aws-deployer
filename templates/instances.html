@@ -20,7 +20,8 @@
                         <td class="d-none d-md-table-cell d-lg-table-cell"><b>TeamID</b></td>
                         <td class="d-none d-md-table-cell d-lg-table-cell"><b>Name</b></td>
                         <td class="d-none d-md-table-cell d-lg-table-cell"><b>IP</b></td>
-                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Allowed</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Status</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Actions</b></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,10 +37,13 @@
                             {{instance.name}}
                         </td>
                         <td class="d-none d-md-table-cell d-lg-table-cell">
-                            <span>{{instance.ip}}</span>
+                            {{instance.ip}}
                         </td>
                         <td class="d-none d-md-table-cell d-lg-table-cell">
-                            <span>{{instance.allowed}}</span>
+                            {{statuses[instance.name]}}
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            <a href="{{ request.script_root }}/admin/deployments/{{instance.id}}/start">Start</a> / <a href="{{ request.script_root }}/admin/deployments/{{instance.id}}/stop">Stop</a> / <a href="{{ request.script_root }}/admin/deployments/{{instance.id}}/delete">Delete</a>
                         </td>
                     </tr>
                 {% endfor %}

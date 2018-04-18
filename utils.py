@@ -1,10 +1,84 @@
 import boto3
+import random
 
-from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
-from CTFd.models import db, Challenges, Files, Solves, WrongKeys, Keys, Tags, Teams, Awards, Hints, Unlocks
+aws_access_key_id='<ask bspar>'
+aws_secret_access_key='<ask bspar>'
+regions = {
+    # 'us-east-1' : 'ami-89e449f6',
+    'us-east-2' : 'ami-27d5e642',
+    # 'us-west-1' : 'NONE',
+    # 'us-west-2' : 'NONE',
+    # 'ap-northeast-1' : 'NONE',
+    # 'eu-central-1' : 'NONE'
+}
+vpc = {
+    # 'us-east-1' : 'vpc-d384ffa8',
+    'us-east-2' : 'vpc-1f87ea77',
+    # 'us-west-1' : 'NONE',
+    # 'us-west-2' : 'NONE',
+    # 'ap-northeast-1' : 'NONE',
+    # 'eu-central-1' : 'NONE'
+}
+
+def get_ec2(region=None):
+    if not region:
+        region = random.choice(list(regions.keys()))
+    ec2 = boto3.resource('ec2',
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        region_name=region)
+    return (region, ec2)
 
 def instance_status(name):
-    return 'OK'
+    instid = name.split('.')[0]
+    region = name.split('.')[1]
+    _, ec2 = get_ec2(region)
+    inst = ec2.Instance(instid)
+    inst.load()
+    return inst.state['Name']
 
-def create_instance(ami, teamid):
-    return '10.12.11.13'
+def all_statuses():
+    statuses = dict()
+    for region in regions:
+        _, ec2 = get_ec2(region)
+        for status in ec2.meta.client.describe_instance_status(IncludeAllInstances=True)['InstanceStatuses']:
+            statuses[status['InstanceId']+'.'+region] = status['InstanceState']['Name']
+    return statuses
+
+def create_instance(region=None):
+    region, ec2 = get_ec2(region)
+    instance = ec2.create_instances(ImageId=regions[region], InstanceType='t2.small',
+        KeyName='bspartop-vm', MaxCount=1, MinCount=1)[0]
+    name = instance.instance_id + '.' + region
+    return ('pending', name)
+
+def get_ip(name):
+    instid = name.split('.')[0]
+    region = name.split('.')[1]
+    _, ec2 = get_ec2(region)
+    inst = ec2.Instance(instid)
+    ip = inst.public_ip_address
+    if not ip:
+        ip = 'pending'
+    return ip
+
+def terminate(name):
+    instid = name.split('.')[0]
+    region = name.split('.')[1]
+    _, ec2 = get_ec2(region)
+    inst = ec2.Instance(instid)
+    inst.terminate()
+
+def stop(name):
+    instid = name.split('.')[0]
+    region = name.split('.')[1]
+    _, ec2 = get_ec2(region)
+    inst = ec2.Instance(instid)
+    inst.stop()
+
+def start(name):
+    instid = name.split('.')[0]
+    region = name.split('.')[1]
+    _, ec2 = get_ec2(region)
+    inst = ec2.Instance(instid)
+    inst.start()

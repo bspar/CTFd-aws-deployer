@@ -12,7 +12,7 @@ from . import utils
 class Instances(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     teamid = db.Column(db.Integer, db.ForeignKey('teams.id'))
-    name = db.Column(db.Text)
+    name = db.Column(db.Text)       # name is 'instID.region'
     ip = db.Column(db.Text)
     allowed = db.Column(db.Integer) # is the team allowed to use their instance?
                                     # potentially useful for time-based instances
@@ -32,9 +32,32 @@ def load(app):
     @admins_only
     def deployments():
         instances = Instances.query.all()
-        # for i in instances:
-        #     i.status = utils.instance_status(i.name)
-        return render_template('instances.html', instances=instances)
+        statuses = utils.all_statuses()
+        return render_template('instances.html', instances=instances, statuses=statuses)
+
+    @aws_deployments.route('/admin/deployments/<int:instance_id>/delete')
+    @admins_only
+    def delete_instance(instance_id):
+        inst = Instances.query.filter_by(id=instance_id).first()
+        utils.terminate(inst.name)
+        db.session.delete(inst)
+        db.session.commit()
+        db.session.close()
+        return 'success'
+
+    @aws_deployments.route('/admin/deployments/<int:instance_id>/stop')
+    @admins_only
+    def sop_instance(instance_id):
+        inst = Instances.query.filter_by(id=instance_id).first()
+        utils.stop(inst.name)
+        return 'success'
+
+    @aws_deployments.route('/admin/deployments/<int:instance_id>/start')
+    @admins_only
+    def start_instance(instance_id):
+        inst = Instances.query.filter_by(id=instance_id).first()
+        utils.start(inst.name)
+        return 'success'
 
     @aws_deployments.route('/admin/deployments_teams', methods=['GET'])
     @admins_only
@@ -51,23 +74,21 @@ def load(app):
             except NoResultFound:
                 inst = 'none'
             except MultipleResultsFound:
-                inst = '!!Multiple!!'
+                inst = '!!Multiple!! - ' + str(team.id)
             mapping[team.name] = [inst, allowed]
         return render_template('awsdep_teams.html', teams=teams, mapping=mapping)
 
-    @aws_deployments.route('/admin/deployments/<int:team_id>/new')
+    @aws_deployments.route('/admin/deployments_teams/<int:team_id>/new')
     @admins_only
     def new_deployment(team_id):
-        ami_image_id = 'asdf'
-        teamname = Teams.query.filter_by(id=team_id).first().name
-        ip = utils.create_instance(ami_image_id, teamname)
-        instance = Instances(teamid=team_id, name=teamname, ip=ip, allowed=0)
+        ip, name = utils.create_instance()
+        instance = Instances(teamid=team_id, name=name, ip=ip, allowed=0)
         db.session.add(instance)
         db.session.commit()
         db.session.close()
         return 'success'
 
-    @aws_deployments.route('/admin/deployments/<int:team_id>/allow')
+    @aws_deployments.route('/admin/deployments_teams/<int:team_id>/allow')
     @admins_only
     def allow_deployment(team_id):
         inst = Instances.query.filter_by(teamid=team_id).first()
@@ -78,12 +99,13 @@ def load(app):
         db.session.close()
         return 'success'
 
-    @aws_deployments.route('/admin/deployments/<int:team_id>/delete')
+    @aws_deployments.route('/admin/deployments_teams/<int:team_id>/delete')
     @admins_only
     def delete_deployment(team_id):
         inst = Instances.query.filter_by(teamid=team_id).first()
         if not inst:
             return 'fail - no instance available'
+        utils.terminate(inst.name)
         db.session.delete(inst)
         db.session.commit()
         db.session.close()
@@ -100,17 +122,22 @@ def load(app):
                 if not solves:
                     return render_template('team_instance.html', team=team, inst=None)
                 else:
-                    ami_image_id = 'asdf'
-                    ip = utils.create_instance(ami_image_id, team.name)
-                    instance = Instances(teamid=team.id, name=team.name, ip=ip, allowed=1)
+                    ip, name = utils.create_instance()
+                    instance = Instances(teamid=team.id, name=name, ip=ip, allowed=1)
                     db.session.add(instance)
                     db.session.commit()
             except MultipleResultsFound:
                 return 'Error 420 - you should never see this. Alert BlazeCTF staff'
-            return render_template('team_instance.html', team=team, inst=instance)
+
+            if instance.ip == 'pending':
+                instance.ip = utils.get_ip(instance.name)
+                db.session.commit()
+            return render_template('team_instance.html', team=team, inst=instance,
+                    status=utils.instance_status(instance.name))
 
         else:
             return redirect(url_for('auth.login'))
 
+    # init code
     register_user_page_menu_bar('Instance', 'instance')
     app.register_blueprint(aws_deployments)

@@ -17,25 +17,24 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>TeamID</b></td>
-                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Team</b></td>
-                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Instance</b></td>
-                        <td class="d-none d-md-table-cell d-lg-table-cell"><b>Allowed</b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b> </b></td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell"><b> </b></td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td class="d-none d-md-table-cell d-lg-table-cell">
-                            {{team.id}}
-                        </td>
-                        <td class="d-none d-md-table-cell d-lg-table-cell">
-                            {{team.name}}
+                            <b>IP address</b>
                         </td>
                         <td class="d-none d-md-table-cell d-lg-table-cell">
                             {{ inst.ip }}
                         </td>
+                    <tr>
                         <td class="d-none d-md-table-cell d-lg-table-cell">
-                            {{ inst.allowed }}
+                            <b>Status</b>
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            {{ status }}
                         </td>
                     </tr>
                 </tbody>
