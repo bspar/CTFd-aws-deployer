@@ -115,10 +115,12 @@ def load(app):
     def user_deployment():
         if authed():
             team = Teams.query.filter_by(id=session['id']).first()
+            challenge = Challenges.query.filter_by(id=24).first()
             try:
                 instance = Instances.query.filter_by(teamid=team.id).one()
             except NoResultFound:
-                solves = Solves.query.filter_by(teamid=team.id, flag='sl0thcoin_420_burnit').first()
+                #solves = Solves.query.filter_by(teamid=team.id, flag='flag{{W4Y_2_b1g}}').first()
+                solves = Solves.query.filter_by(teamid=team.id, chalid=challenge.id).first()
                 if not solves:
                     return render_template('team_instance.html', team=team, inst=None)
                 else:

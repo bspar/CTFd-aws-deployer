@@ -5,11 +5,11 @@ aws_access_key_id='<ask bspar>'
 aws_secret_access_key='<ask bspar>'
 regions = {
     # 'us-east-1' : 'ami-89e449f6',
-    'us-east-2' : 'ami-27d5e642',
-    # 'us-west-1' : 'NONE',
-    # 'us-west-2' : 'NONE',
-    # 'ap-northeast-1' : 'NONE',
-    # 'eu-central-1' : 'NONE'
+    'us-east-2' : 'ami-2ca79449',
+    'us-west-1' : 'ami-dc4e53bc',
+    'us-west-2' : 'ami-761e700e',
+    'ap-northeast-1' : 'ami-1bf6ec67',
+    'eu-central-1' : 'ami-224266c9'
 }
 vpc = {
     # 'us-east-1' : 'vpc-d384ffa8',

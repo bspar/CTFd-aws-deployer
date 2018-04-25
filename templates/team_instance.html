@@ -14,6 +14,7 @@
     <div class="row">
         <div class="col-md-12">
             {% if inst %}
+            <h4>Each team gets their own ETH network.</h4>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -37,10 +38,36 @@
                             {{ status }}
                         </td>
                     </tr>
+                    <tr>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            <b>Username:password (default)</b>
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            root:l3tsgetreadytobl1zz
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            <b>Forward geth port (JSONRPC)</b>
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            ssh root@&lt;ip&gt; -p 8022 -L 8545:public-node:8545
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            <b>Forward faucet port (HTTP)</b>
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell">
+                            ssh root@&lt;ip&gt; -p 8022 -L 8080:faucet:8080
+                        </td>
+                    </tr>
                 </tbody>
             </table>
+            <p>Sorry, but the rest of the challenge is figuring out the rest of the information you might want.
+            <center><p><img src="https://i.imgur.com/De632jR.png" alt="good luck" height="509" width="667"></center>
             {% else %}
-            <h1>Please solve the challenge "Sanity" before coming here</h1>
+            <h1>You need to solve the challenge "something_happening" before you get your ETH.</h1>
             {% endif %}
         </div>
     </div>
